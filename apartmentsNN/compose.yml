@@ -1,12 +1,51 @@
 volumes:
   nn_apartments_data:
 
+networks:
+  nn_apartments_network:
+
 services:
   db:
-    container_name: 'nn_apartments'
+    container_name: ${POSTGRES_HOST}
     image: postgres:alpine
     env_file: .env
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - nn_apartments_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [ 'CMD', 'pg_isready', '-U', '${POSTGRES_USER}', '-d', '${POSTGRES_DB}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      nn_apartments_network:
+
+
+
+  backend:
+    container_name: nn_apartments_backend
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    volumes:
+      - .:/apartmentsNN
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command:
+      - bash
+      - -c
+      - |
+        python manage.py makemigrations
+        python manage.py migrate
+        python manage.py runserver 0.0.0.0:8000
+    networks:
+      nn_apartments_network:
+    restart: unless-stopped

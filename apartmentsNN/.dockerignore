@@ -1,0 +1,13 @@
+# Common
+README.md
+CHANGELOG.md
+*compose.yml
+*Dockerfile
+
+# JetBrains
+.idea
+
+# git
+.git
+.gitattributes
+.gitignore
