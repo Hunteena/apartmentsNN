@@ -1,0 +1,12 @@
+volumes:
+  nn_apartments_data:
+
+services:
+  db:
+    container_name: 'nn_apartments'
+    image: postgres:alpine
+    env_file: .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - nn_apartments_data:/var/lib/postgresql/data
