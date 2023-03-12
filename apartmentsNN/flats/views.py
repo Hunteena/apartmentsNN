@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import fields
 from rest_framework.viewsets import ModelViewSet
 
 from .models import Apartment
