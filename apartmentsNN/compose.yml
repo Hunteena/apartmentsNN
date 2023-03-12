@@ -19,7 +19,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
-      start_period: 10s
+      start_period: 5s
     restart: unless-stopped
     networks:
       nn_apartments_network:
