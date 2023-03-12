@@ -3,12 +3,12 @@ from django.contrib import admin
 from .models import Apartment, Comfort, DetailedCharacteristic, Image, Location
 
 
-class DetailedInline(admin.StackedInline):
+class DetailedInline(admin.TabularInline):
     model = DetailedCharacteristic
     extra = 0
 
 
-class ComfortInline(admin.StackedInline):
+class ComfortInline(admin.TabularInline):
     model = Comfort
     extra = 0
 

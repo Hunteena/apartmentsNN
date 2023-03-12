@@ -1,4 +1,6 @@
-from rest_framework import serializers
+from drf_spectacular.utils import extend_schema, inline_serializer, \
+    extend_schema_serializer, OpenApiExample
+from rest_framework import serializers, fields
 
 from .models import Apartment, Comfort, DetailedCharacteristic, Image, Location
 
@@ -25,17 +27,31 @@ class ComfortSerializer(serializers.ModelSerializer):
 
 
 class LocationSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        """Convert `username` to lowercase."""
+        ret = super().to_representation(instance)
+        ret['desc'] = [el.strip() for el in ret['desc'].split(',')]
+        return ret
+
     class Meta:
         model = Location
-        # fields = '__all__'
+        # fields = ['url', 'desc']
         exclude = ['id', 'apartment']
 
 
 class ApartmentSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
-    detailed = DetailedCharacteristicSerializer(many=True)
+    detailedCharacteristic = DetailedCharacteristicSerializer(many=True)
     comfort = ComfortSerializer(many=True)
     location = LocationSerializer()
+
+    def to_representation(self, instance):
+        """Convert `username` to lowercase."""
+        ret = super().to_representation(instance)
+        ret['shortCharacteristic'] = [
+            el.strip() for el in ret['shortCharacteristic'].split(',')
+        ]
+        return ret
 
     class Meta:
         model = Apartment
