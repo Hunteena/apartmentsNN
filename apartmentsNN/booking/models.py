@@ -18,11 +18,11 @@ class Booking(models.Model):
         verbose_name='Апартаменты',
         help_text='Выберите апартаменты для бронирования'
     )
-    date_from = models.DateField(
+    dateFrom = models.DateField(
         verbose_name='Дата начала',
         help_text='Выберите дату начала бронирования'
     )
-    date_to = models.DateField(
+    dateTo = models.DateField(
         verbose_name='Дата окончания',
         help_text='Выберите дату окончания бронирования'
     )
@@ -57,13 +57,13 @@ class Booking(models.Model):
     # )
 
     def clean(self):
-        if self.date_from > self.date_to:
+        if self.dateFrom > self.dateTo:
             raise ValidationError(
-                {'date_to': 'Дата окончания не может быть раньше даты начала'}
+                {'dateTo': 'Дата окончания не может быть раньше даты начала'}
             )
 
     def __str__(self):
-        return (f"{self.apartment}: {self.date_from} - {self.date_to}. "
+        return (f"{self.apartment}: {self.dateFrom} - {self.dateTo}. "
                 f"Гость: {self.name}")
 
     class Meta:
