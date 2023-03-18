@@ -28,7 +28,6 @@ class ComfortSerializer(serializers.ModelSerializer):
 
 class LocationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
-        """Convert `username` to lowercase."""
         ret = super().to_representation(instance)
         ret['desc'] = [el.strip() for el in ret['desc'].split(',')]
         return ret
@@ -46,7 +45,6 @@ class ApartmentSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
 
     def to_representation(self, instance):
-        """Convert `username` to lowercase."""
         ret = super().to_representation(instance)
         ret['shortCharacteristic'] = [
             el.strip() for el in ret['shortCharacteristic'].split(',')

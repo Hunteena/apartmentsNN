@@ -26,17 +26,6 @@ class ImageInline(admin.StackedInline):
 class ApartmentAdmin(admin.ModelAdmin):
     inlines = [DetailedInline, ComfortInline, LocationInline, ImageInline]
 
-    # fieldsets = (
-    #     (None, {
-    #         'fields': ('name', 'title', 'description', 'capacity', 'price')
-    #     }),
-    #     ('Расположение', {
-    #         'fields': ('address', LocationInline),
-    #     }),
-    #     ('Характеристики', {
-    #         'fields': ('shortCharacteristic', 'detailed', 'comfort'),
-    #     }),
-    # )
     fields = (
         'name',
         'title',
@@ -45,6 +34,8 @@ class ApartmentAdmin(admin.ModelAdmin):
         'price',
         'capacity',
         'shortCharacteristic')
+
+    list_display = ('name', 'shortCharacteristic', 'price')
 
 
 admin.site.register(Apartment, ApartmentAdmin)
