@@ -23,7 +23,7 @@ from rest_framework.routers import DefaultRouter
 
 from flats.views import ApartmentViewSet
 
-from booking.views import BookingCreateView, ReservedDatesView
+from booking.views import BookingCreateAPIView, ReservedDatesAPIView
 
 admin.site.site_header = 'Администрирование сайта "Квартиры в Нижнем Новгороде"'
 admin.site.site_title = "Администрирование сайта"
@@ -35,8 +35,8 @@ router.register('apartments', ApartmentViewSet, basename='apartment')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/booking/', BookingCreateView.as_view(), name='booking'),
-    path('api/dates/', ReservedDatesView.as_view(), name='dates'),
+    path('api/booking/', BookingCreateAPIView.as_view(), name='booking'),
+    path('api/dates/', ReservedDatesAPIView.as_view(), name='dates'),
 
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 
 from flats.models import Apartment
 from users.models import User
@@ -56,11 +57,11 @@ class Booking(models.Model):
     #     help_text='Администратор, принявший решение о принятии или отклонении брони',
     # )
 
-    def clean(self):
-        if self.dateFrom > self.dateTo:
-            raise ValidationError(
-                {'dateTo': 'Дата окончания не может быть раньше даты начала'}
-            )
+    # def clean(self):
+    #     if self.dateFrom > self.dateTo:
+    #         raise ValidationError(
+    #             {'dateTo': 'Дата окончания не может быть раньше даты начала'}
+    #         )
 
     def __str__(self):
         return (f"{self.apartment}: {self.dateFrom} - {self.dateTo}. "
@@ -69,4 +70,10 @@ class Booking(models.Model):
     class Meta:
         verbose_name = 'Бронирование'
         verbose_name_plural = 'Список бронирований'
+        constraints = [models.CheckConstraint(
+            check=Q(dateFrom__lt=models.F('dateTo')),
+            name='dateFrom_lte_dateTo',
+            violation_error_message='Дата окончания бронирования не может быть'
+                                    ' раньше даты начала или совпадать с ней'
+        )]
 
