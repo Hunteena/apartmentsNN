@@ -9,9 +9,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
 
-from booking.models import Booking
+from booking.models import Booking, get_reserved_dates
 from booking.serializers import BookingSerializer, ReservedDatesSerializer
-from booking.utils import get_reserved_dates
 
 
 class BookingCreateAPIView(generics.CreateAPIView):
@@ -43,11 +42,8 @@ class ReservedDatesAPIView(APIView):
         """
         Возвращает список забронированных дат для каждой квартиры
         """
-        queryset = Booking.objects.filter(
-            Q(status='inwork') | Q(status='confirmed')
-        ).only('apartment', 'dateFrom', 'dateTo')
         reserved_dates = [
             {'id_apartment': apartment_id, 'dates': dates}
-            for apartment_id, dates in get_reserved_dates(queryset).items()
+            for apartment_id, dates in get_reserved_dates().items()
         ]
         return Response(reserved_dates)

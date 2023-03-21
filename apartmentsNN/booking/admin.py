@@ -9,9 +9,9 @@ class BookingAdmin(admin.ModelAdmin):
         ('Даты', {'fields': (('dateFrom', 'dateTo'),)}),
         ('Информация о госте', {'fields': ('name', 'phone', 'email',)})
     )
-    # readonly_fields = ('admin',)
+    # readonly_fields = ('dateFrom', 'dateTo')
     list_filter = ('apartment', 'status', 'dateFrom', 'dateTo')
-    list_display = ('dates', 'apartment', 'status')
+    list_display = ('dates', 'apartment', 'status', 'name', 'phone')
 
     @admin.display(description='Даты')
     def dates(self, obj):
