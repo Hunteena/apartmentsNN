@@ -9,6 +9,7 @@ from flats.serializers import ApartmentSerializer
 from backend.schema import BOOKING_SCHEMA_EXAMPLE
 
 
+# избавиться от сложного примера ответа
 @extend_schema(
     examples=[OpenApiExample('response', value=BOOKING_SCHEMA_EXAMPLE)]
 )

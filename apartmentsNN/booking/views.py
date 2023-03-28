@@ -25,25 +25,20 @@ class ReservedDatesAPIView(APIView):
     """
     Класс для получения забронированных дат
     """
-    # queryset = Booking.objects.filter(
-    #     Q(status='inwork') | Q(status='confirmed')
-    # ).only('apartment', 'dateFrom', 'dateTo')
     serializer_class = ReservedDatesSerializer(many=True)
 
-    # @extend_schema(
-    #     responses=ReservedDatesSerializer()
-    #     # examples=[OpenApiExample(
-    #     #     name='reserved dates',
-    #     #     response_only=True,
-    #     #     value={"1": ["2023-03-18","2023-03-19"]}
-    #     # )]
-    # )
-    def get(self, request):
+    def get(self, request, apartment_id=None):
         """
-        Возвращает список забронированных дат для каждой квартиры
+        Возвращает список забронированных дат
         """
-        reserved_dates = [
-            {'id_apartment': apartment_id, 'dates': dates}
-            for apartment_id, dates in get_reserved_dates().items()
-        ]
+        if apartment_id:
+            reserved_dates = [{
+                'id_apartment': apartment_id,
+                'dates': get_reserved_dates(apartment_id).get(apartment_id)
+            }]
+        else:
+            reserved_dates = [
+                {'id_apartment': ap_id, 'dates': dates}
+                for ap_id, dates in get_reserved_dates().items()
+            ]
         return Response(reserved_dates)

@@ -24,15 +24,12 @@ services:
     networks:
       nn_apartments_network:
 
-
   backend:
     container_name: nn_apartments_backend
     depends_on:
       db:
         condition: service_healthy
     env_file: .env
-    environment:
-      - PYTHONUNBUFFERED=1
     volumes:
       - .:/apartmentsNN
     build:

@@ -36,6 +36,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/booking/', BookingCreateAPIView.as_view(), name='booking'),
+    path('api/dates/<int:apartment_id>', ReservedDatesAPIView.as_view(), name='dates'),
     path('api/dates/', ReservedDatesAPIView.as_view(), name='dates'),
 
     # YOUR PATTERNS
