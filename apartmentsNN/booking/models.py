@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models import Q
 
 from flats.models import Apartment
+from users.models import User
 
 
 def get_reserved_dates(apartment_id: int = None) -> dict:
@@ -75,6 +76,50 @@ class Status(models.TextChoices):
     cancelled = 'cancelled', 'Отменено'
 
 
+def update_status_log(booking: 'Booking', status=Status.inwork, manager=None):
+    new_status = StatusLog(
+        booking=booking,
+        status=status,
+        manager=manager
+    )
+    new_status.save()
+
+
+class StatusLog(models.Model):
+    booking = models.ForeignKey(
+        "Booking",
+        related_name='statuses',
+        on_delete=models.CASCADE
+    )
+    status = models.CharField(
+        max_length=16,
+        choices=Status.choices,
+        verbose_name='Статус бронирования',
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Когда статус был изменен',
+    )
+    manager = models.ForeignKey(
+        User,
+        related_name='statuses',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Кто изменил статус',
+    )
+
+    def __str__(self):
+        return (
+            f"{Status(self.status).label}"
+        )
+
+    class Meta:
+        verbose_name = 'Изменение статуса'
+        verbose_name_plural = 'История статусов бронирования'
+        ordering = ['-created_at']
+
+
 class Booking(models.Model):
     apartment = models.ForeignKey(
         Apartment,
@@ -116,7 +161,10 @@ class Booking(models.Model):
         if self.pk:
             previous_data = self.__class__.objects.get(pk=self.pk)
             if previous_data.status in (Status.inwork, Status.confirmed):
-                dates_to_exclude = period(previous_data.dateFrom, previous_data.dateTo)
+                dates_to_exclude = period(
+                    start=previous_data.dateFrom,
+                    end=previous_data.dateTo
+                )
             else:
                 dates_to_exclude = None
             forbidden = check_period(
@@ -126,7 +174,15 @@ class Booking(models.Model):
             )
             # print(forbidden)
             if forbidden:
-                raise ValidationError(f"Даты уже забронированы: {', '.join(forbidden)}")
+                raise ValidationError(
+                    f"Даты уже забронированы: {', '.join(forbidden)}"
+                )
+
+    def save(self, *args, **kwargs):
+        is_new_booking = False if self.pk else True
+        super().save(*args, **kwargs)
+        if is_new_booking:
+            update_status_log(self)
 
     def __str__(self):
         return (f"{self.apartment}: {self.dateFrom} - {self.dateTo}. "
