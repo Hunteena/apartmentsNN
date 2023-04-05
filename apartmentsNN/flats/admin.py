@@ -1,6 +1,14 @@
 from django.contrib import admin
 
-from .models import Apartment, Comfort, DetailedCharacteristic, Image, Location
+from flats.models import (
+    Apartment,
+    ApartmentImage,
+    Comfort,
+    DetailedCharacteristic,
+    Location,
+    MainPage,
+    MainPageSliderImage
+)
 
 
 class DetailedInline(admin.TabularInline):
@@ -18,13 +26,24 @@ class LocationInline(admin.StackedInline):
     extra = 0
 
 
-class ImageInline(admin.StackedInline):
-    model = Image
+class ApartmentImageInline(admin.TabularInline):
+    fields = ('group', 'photo', 'name', 'altName')
+    model = ApartmentImage
+    extra = 0
+
+
+class MainPageSliderImageInline(admin.StackedInline):
+    model = MainPageSliderImage
     extra = 0
 
 
 class ApartmentAdmin(admin.ModelAdmin):
-    inlines = [DetailedInline, ComfortInline, LocationInline, ImageInline]
+    inlines = [
+        DetailedInline,
+        ComfortInline,
+        LocationInline,
+        ApartmentImageInline
+    ]
 
     fields = (
         'name',
@@ -33,9 +52,15 @@ class ApartmentAdmin(admin.ModelAdmin):
         'description',
         'price',
         'capacity',
-        'shortCharacteristic')
+        'shortCharacteristic'
+    )
 
     list_display = ('name', 'shortCharacteristic', 'price')
 
 
+class MainPageAdmin(admin.ModelAdmin):
+    inlines = [MainPageSliderImageInline]
+
+
 admin.site.register(Apartment, ApartmentAdmin)
+admin.site.register(MainPage, MainPageAdmin)

@@ -1,12 +1,16 @@
 BOOKING_SCHEMA_EXAMPLE = {
     "id": 0,
-    "images": [
-        {
-            "photo": "string",
-            "name": "string",
-            "altName": "string"
-        }
-    ],
+    "images": {
+        "0":
+        [
+            {
+                "photo": "string",
+                "name": "string",
+                "altName": "string",
+                "group": 0
+            }
+        ]
+    },
     "detailedCharacteristic": [
         {
             "name": "string",

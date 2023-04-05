@@ -1,6 +1,16 @@
 from django.db import models
 
 
+class MainPage(models.Model):
+
+    def __str__(self):
+        return 'Главная страница'
+
+    class Meta:
+        verbose_name = 'Главная страница'
+        verbose_name_plural = 'Главная страница'
+
+
 class Apartment(models.Model):
     name = models.CharField(
         max_length=128,
@@ -65,10 +75,20 @@ class Image(models.Model):
         verbose_name='Альтернативное название',
         help_text='Введите альтернативное название'
     )
+
+
+class ApartmentImage(Image):
     apartment = models.ForeignKey(
         Apartment,
         on_delete=models.CASCADE,
         related_name='images'
+    )
+    group = models.SmallIntegerField(
+        verbose_name='Номер группы',
+        help_text='Введите целое число (можно отрицательное), '
+                  'которое будет использованно для сортировки групп',
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
@@ -77,7 +97,22 @@ class Image(models.Model):
     class Meta:
         verbose_name = 'Фотография'
         verbose_name_plural = 'Список фотографий'
+        ordering = ['group']
 
+
+class MainPageSliderImage(Image):
+    slider = models.ForeignKey(
+        MainPage,
+        on_delete=models.CASCADE,
+        related_name='slider_images'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Фотография'
+        verbose_name_plural = 'Слайдер'
 
 
 class DetailedCharacteristic(models.Model):
@@ -151,4 +186,3 @@ class Location(models.Model):
     class Meta:
         verbose_name = 'Расположение'
         verbose_name_plural = 'Список расположений'
-

@@ -2,13 +2,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, \
-    SpectacularRedocView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 
-from flats.views import ApartmentViewSet
-
 from booking.views import BookingCreateAPIView, ReservedDatesAPIView
+from flats.views import ApartmentViewSet, MainPageViewSet
 
 admin.site.site_header = 'Администрирование сайта "Квартиры в Нижнем Новгороде"'
 admin.site.site_title = "Администрирование сайта"
@@ -23,6 +21,7 @@ urlpatterns = [
     path('api/booking/', BookingCreateAPIView.as_view(), name='booking'),
     path('api/dates/<int:apartment_id>/', ReservedDatesAPIView.as_view(), name='apartment-dates'),
     path('api/dates/', ReservedDatesAPIView.as_view(), name='dates'),
+    path('api/mainpage/', MainPageViewSet.as_view(), name='main-page'),
 
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

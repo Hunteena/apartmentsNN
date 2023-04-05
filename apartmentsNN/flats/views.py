@@ -1,15 +1,13 @@
-from django.shortcuts import render
-from drf_spectacular.utils import extend_schema, inline_serializer, \
-    OpenApiExample
-from rest_framework import fields
+from drf_spectacular.utils import extend_schema, OpenApiExample
+from rest_framework import generics
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
-from flats.models import Apartment
-from flats.serializers import ApartmentSerializer
 from backend.schema import BOOKING_SCHEMA_EXAMPLE
+from flats.models import Apartment, MainPage
+from flats.serializers import ApartmentSerializer, MainPageSerializer
 
 
-# избавиться от сложного примера ответа
+# TODO избавиться от сложного примера ответа
 @extend_schema(
     examples=[OpenApiExample('response', value=BOOKING_SCHEMA_EXAMPLE)]
 )
@@ -19,3 +17,11 @@ class ApartmentViewSet(ReadOnlyModelViewSet):
     """
     queryset = Apartment.objects.all()
     serializer_class = ApartmentSerializer
+
+
+class MainPageViewSet(generics.ListAPIView):
+    """
+    Класс для просмотра информации на главной странице
+    """
+    queryset = MainPage.objects.all()
+    serializer_class = MainPageSerializer
