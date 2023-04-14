@@ -37,7 +37,25 @@ class Apartment(models.Model):
         verbose_name='Короткое описание',
         help_text='Введите короткое описание через запятую для отображения под названием апартаментов'
     )
-    # detailedCharacteristic ForeignKey
+
+    rooms = models.PositiveSmallIntegerField(
+        verbose_name='Количество комнат',
+        help_text='Введите количество комнат'
+    )
+    store = models.CharField(
+        max_length=16,
+        verbose_name='Этаж',
+        help_text='Введите этаж и этажность здания (например, 1 из 2)'
+    )
+    area = models.PositiveSmallIntegerField(
+        verbose_name='Общая площадь',
+        help_text='Введите общую площадь'
+    )
+    year = models.PositiveSmallIntegerField(
+        verbose_name='Год постройки',
+        help_text='Введите год постройки'
+    )
+
     # comfort ForeignKey
     # location OneToOneField
     price = models.PositiveIntegerField(
@@ -115,41 +133,18 @@ class MainPageSliderImage(Image):
         verbose_name_plural = 'Слайдер'
 
 
-class DetailedCharacteristic(models.Model):
-    name = models.CharField(
-        max_length=128,
-        verbose_name='Название',
-        help_text='Введите название характеристики'
-    )
-    data = models.CharField(
-        max_length=512,
-        verbose_name='Значение',
-        help_text='Введите значение характеристики'
-    )
-    apartment = models.ForeignKey(
-        Apartment,
-        on_delete=models.CASCADE,
-        related_name='detailedCharacteristic'
-    )
-
-    def __str__(self):
-        return f"{self.name}: {self.data}"
-
-    class Meta:
-        verbose_name = 'Характеристика'
-        verbose_name_plural = 'Список характеристик'
-
-
 class Comfort(models.Model):
-    type = models.CharField(
+
+    class ComfortOptions(models.TextChoices):
+        wifi = 'wi-fi', 'Бесплатный Wi-Fi'
+        parking = 'parking', 'Бесплатная общественная парковка поблизости'
+
+    option = models.CharField(
         max_length=128,
-        verbose_name='Тип',
-        help_text='Введите тип опции комфорт'
-    )
-    description = models.CharField(
-        max_length=512,
-        verbose_name='Описание',
-        help_text='Введите описание опции комфорт'
+        choices=ComfortOptions.choices,
+        default=ComfortOptions.wifi,
+        verbose_name='Опция комфорт',
+        help_text='Выберите опцию комфорт'
     )
     apartment = models.ForeignKey(
         Apartment,
@@ -158,7 +153,7 @@ class Comfort(models.Model):
     )
 
     def __str__(self):
-        return f"{self.type}: {self.description}"
+        return self.option
 
     class Meta:
         verbose_name = 'Опция комфорт'

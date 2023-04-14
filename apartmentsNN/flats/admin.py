@@ -4,16 +4,10 @@ from flats.models import (
     Apartment,
     ApartmentImage,
     Comfort,
-    DetailedCharacteristic,
     Location,
     MainPage,
     MainPageSliderImage
 )
-
-
-class DetailedInline(admin.TabularInline):
-    model = DetailedCharacteristic
-    extra = 0
 
 
 class ComfortInline(admin.TabularInline):
@@ -39,20 +33,23 @@ class MainPageSliderImageInline(admin.StackedInline):
 
 class ApartmentAdmin(admin.ModelAdmin):
     inlines = [
-        DetailedInline,
         ComfortInline,
         LocationInline,
         ApartmentImageInline
     ]
-
-    fields = (
-        'name',
-        'title',
-        'address',
-        'description',
-        'price',
-        'capacity',
-        'shortCharacteristic'
+    fieldsets = (
+        (None, {'fields': (
+            'name',
+            'title',
+            'address',
+            'description',
+            'price',
+            'capacity',
+            'shortCharacteristic'
+        )}),
+        ('Характеристики', {'fields': (
+            'rooms', 'store', 'area', 'year'
+        )})
     )
 
     list_display = ('name', 'shortCharacteristic', 'price')

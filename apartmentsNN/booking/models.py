@@ -10,7 +10,8 @@ from users.models import User
 
 def get_reserved_dates(apartment_id: int = None) -> dict:
     """
-    Возвращает словарь, где id апартаментов сопоставлен список забронированных дат
+    Возвращает словарь, где id апартаментов сопоставлен список забронированных дат.
+    Последняя дата бронирования считается свободной.
     """
     query = Q(status='inwork') | Q(status='confirmed')
     if apartment_id:
@@ -21,10 +22,10 @@ def get_reserved_dates(apartment_id: int = None) -> dict:
     reserved = {}
     for booking in queryset:
         d = booking.dateFrom
-        dates = [d]
+        dates = []
         while d < booking.dateTo:
-            d += datetime.timedelta(days=1)
             dates.append(d)
+            d += datetime.timedelta(days=1)
         # print(dates)
         if reserved.get(booking.apartment.id):
             reserved[booking.apartment.id] += dates

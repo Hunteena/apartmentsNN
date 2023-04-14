@@ -6,7 +6,6 @@ from flats.models import (
     Apartment,
     ApartmentImage,
     Comfort,
-    DetailedCharacteristic,
     Image,
     Location,
     MainPage
@@ -24,13 +23,6 @@ class ApartmentImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApartmentImage
         fields = ['photo', 'name', 'altName', 'group']
-
-
-class DetailedCharacteristicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DetailedCharacteristic
-        # fields = '__all__'
-        exclude = ['id', 'apartment']
 
 
 class ComfortSerializer(serializers.ModelSerializer):
@@ -54,7 +46,6 @@ class LocationSerializer(serializers.ModelSerializer):
 
 class ApartmentSerializer(serializers.ModelSerializer):
     images = ApartmentImageSerializer(many=True)
-    detailedCharacteristic = DetailedCharacteristicSerializer(many=True)
     comfort = ComfortSerializer(many=True)
     location = LocationSerializer()
 
