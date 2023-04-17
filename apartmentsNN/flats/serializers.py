@@ -26,6 +26,13 @@ class ApartmentImageSerializer(serializers.ModelSerializer):
 
 
 class ComfortSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = {
+            "type": instance.option,
+            "description": instance.ComfortOptions(instance.option).label
+        }
+        return ret
+
     class Meta:
         model = Comfort
         # fields = '__all__'
@@ -61,6 +68,18 @@ class ApartmentSerializer(serializers.ModelSerializer):
                 for k, g in groupby(images, key=lambda x: x['group'])
             }
 
+        detailed_fields = {
+            'rooms': 'Комнат',
+            'store': 'Этаж',
+            'area': 'Общая площадь',
+            'year': 'Год постройки'
+        }
+        ret['detailedCharacteristic'] = []
+        for field, name in detailed_fields.items():
+            ret['detailedCharacteristic'].append(
+                {"name": name, "data": ret[field]}
+            )
+            ret.pop(field)
         return ret
 
     class Meta:

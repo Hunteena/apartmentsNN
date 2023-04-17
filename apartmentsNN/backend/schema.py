@@ -11,12 +11,6 @@ BOOKING_SCHEMA_EXAMPLE = {
             }
         ]
     },
-    "detailedCharacteristic": [
-        {
-            "name": "string",
-            "data": "string"
-        }
-    ],
     "comfort": [
         {
             "type": "string",
@@ -37,5 +31,11 @@ BOOKING_SCHEMA_EXAMPLE = {
         "string"
     ],
     "price": 2147483647,
-    "capacity": 32767
+    "capacity": 32767,
+    "detailedCharacteristic": [
+        {
+            "name": "string",
+            "data": "string"
+        }
+    ]
 }

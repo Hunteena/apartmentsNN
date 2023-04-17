@@ -138,6 +138,10 @@ class Comfort(models.Model):
     class ComfortOptions(models.TextChoices):
         wifi = 'wi-fi', 'Бесплатный Wi-Fi'
         parking = 'parking', 'Бесплатная общественная парковка поблизости'
+        tv = 'TV', 'Телевизор'
+        appliances = 'appliances', 'Вся необходимая бытовая техника'
+        linens = 'linens', 'Постельное белье/полотенца'
+        keyless = 'keyless', 'Бесключевой доступ'
 
     option = models.CharField(
         max_length=128,
