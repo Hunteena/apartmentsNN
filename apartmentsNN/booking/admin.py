@@ -18,12 +18,14 @@ class BookingAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('apartment', 'status')}),
         ('Даты', {'fields': (('dateFrom', 'dateTo'),)}),
-        ('Информация о госте', {'fields': ('name', 'phone', 'email',)})
+        ('Информация о госте', {'fields': ('name', 'phone', 'email',)}),
+        (None, {'fields': ('guests',)})
     )
     # readonly_fields = ('dateFrom', 'dateTo')
     list_filter = ('apartment', 'status', 'dateFrom', 'dateTo')
     list_display = ('dates', 'apartment', 'status', 'name', 'phone')
     inlines = [StatusLogInline]
+    ordering = ['-dateFrom']
 
     @admin.display(description='Даты')
     def dates(self, obj):

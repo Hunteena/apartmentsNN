@@ -52,6 +52,22 @@ def notify_staff(booking, request):
     email.send()
 
 
+def send_pre_booking(booking):
+    subject = 'Заявка на бронирование'
+    body = (
+        f"Добрый день, {booking.name}!\n\n"
+        f"Вы оставили заявку на бронирование на сайте Квартиры в Нижнем Новгороде. "
+        f"Менеджер свяжется с Вами в ближайшее время.\n\n"
+        f"Информация о бронировании:\n"
+        f"апартаменты {booking.apartment},\n"
+        f"даты {booking.dateFrom} - {booking.dateTo}.\n"
+    )
+    from_email = settings.DEFAULT_FROM_EMAIL
+    to = [booking.email]
+    email = mail.EmailMessage(subject, body, from_email, to)
+    email.send()
+
+
 class BookingSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['dateFrom'] >= attrs['dateTo']:
@@ -71,6 +87,7 @@ class BookingSerializer(serializers.ModelSerializer):
         booking = super().create(validated_data)
         if booking:
             notify_staff(booking, self.context.get('request', None))
+            send_pre_booking(booking)
         return booking
 
     class Meta:

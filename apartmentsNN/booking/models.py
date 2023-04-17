@@ -157,6 +157,11 @@ class Booking(models.Model):
         choices=Status.choices,
         default=Status.inwork
     )
+    guests = models.PositiveSmallIntegerField(
+        verbose_name='Количество гостей',
+        help_text='Введите количество гостей',
+        default=1
+    )
 
     def clean(self):
         if self.pk:
