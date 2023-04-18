@@ -39,7 +39,7 @@ class ApartmentAdmin(admin.ModelAdmin):
     ]
     fieldsets = (
         (None, {'fields': (
-            'name',
+            ('name', 'owner'),
             'title',
             'address',
             'description',
@@ -52,7 +52,7 @@ class ApartmentAdmin(admin.ModelAdmin):
         )})
     )
 
-    list_display = ('name', 'shortCharacteristic', 'price')
+    list_display = ('name', 'shortCharacteristic', 'price', 'owner')
 
 
 class MainPageAdmin(admin.ModelAdmin):

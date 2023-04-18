@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 
 class MainPage(models.Model):
 
@@ -63,8 +65,17 @@ class Apartment(models.Model):
         help_text='Введите цену апартаментов'
     )
     capacity = models.PositiveSmallIntegerField(
-        verbose_name='Максимальная вместительность',
-        help_text='Введите максимальную вместительность'
+        verbose_name='Максимальная вместимость',
+        help_text='Введите максимальную вместимость'
+    )
+    owner = models.ForeignKey(
+        User,
+        related_name='apartments',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name='Владелец',
+        help_text='Выберите владельца'
     )
 
     def __str__(self):
@@ -141,7 +152,11 @@ class Comfort(models.Model):
         tv = 'TV', 'Телевизор'
         appliances = 'appliances', 'Вся необходимая бытовая техника'
         linens = 'linens', 'Постельное белье/полотенца'
-        keyless = 'keyless', 'Бесключевой доступ'
+        key = 'key', 'Бесключевой доступ'
+        view = 'view', 'Вид на реку'
+        bathhouse = 'bathhouse', 'Сауна (оплачивается отдельно)'
+        entrance = 'entrance', 'Отдельный вход'
+        tea = 'tea/coffee', 'Чай/кофе'
 
     option = models.CharField(
         max_length=128,

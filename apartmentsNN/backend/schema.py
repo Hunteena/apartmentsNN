@@ -32,6 +32,7 @@ BOOKING_SCHEMA_EXAMPLE = {
     ],
     "price": 2147483647,
     "capacity": 32767,
+    "owner": 0,
     "detailedCharacteristic": [
         {
             "name": "string",

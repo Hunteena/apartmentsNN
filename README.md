@@ -21,6 +21,11 @@ docker-compose up --build
 docker exec -it nn_apartments_backend python manage.py createsuperuser
 ```
 
+Загрузить в БД данные апартаментов
+```shell
+docker exec -it nn_apartments_backend python manage.py loaddata initial_apartments.json
+```
+
 После успешнего запуска сервера доступны адреса:  
 http://localhost:8000 - основная страница,  
 http://localhost:8000/admin - административная панель сайта,  
