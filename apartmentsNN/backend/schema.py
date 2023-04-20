@@ -1,4 +1,4 @@
-BOOKING_SCHEMA_EXAMPLE = {
+APARTMENT_SCHEMA_EXAMPLE = {
     "id": 0,
     "images": {
         "0":
@@ -39,4 +39,14 @@ BOOKING_SCHEMA_EXAMPLE = {
             "data": "string"
         }
     ]
+}
+
+BOOKING_SCHEMA_EXAMPLE = {
+  "dateFrom": 1688191200000,
+  "dateTo": 1688277600000,
+  "name": "string",
+  "phone": "string",
+  "email": "user@example.com",
+  "guests": 32767,
+  "apartment": 0
 }

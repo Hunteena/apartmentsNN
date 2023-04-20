@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.core import mail
 from django.urls import reverse
@@ -69,6 +71,11 @@ def send_pre_booking(booking):
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        data['dateFrom'] = date.fromtimestamp(int(data['dateFrom']) / 1000)
+        data['dateTo'] = date.fromtimestamp(int(data['dateTo']) / 1000)
+        return super().to_internal_value(data)
+
     def validate(self, attrs):
         if attrs['dateFrom'] >= attrs['dateTo']:
             raise ValidationError('Дата окончания бронирования не может быть '
