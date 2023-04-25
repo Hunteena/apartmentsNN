@@ -84,6 +84,7 @@ class Apartment(models.Model):
     class Meta:
         verbose_name = 'Апартаменты'
         verbose_name_plural = 'Список апартаментов'
+        ordering = ['id']
 
 
 class Image(models.Model):
@@ -180,9 +181,13 @@ class Comfort(models.Model):
 
 
 class Location(models.Model):
-    url = models.URLField(
-        verbose_name='Ссылка на карты',
-        help_text='Введите ссылку на карты'
+    latitude = models.FloatField(
+        verbose_name='Широта',
+        help_text='Введите широту'
+    )
+    longitude = models.FloatField(
+        verbose_name='Долгота',
+        help_text='Введите долготу'
     )
     desc = models.CharField(
         max_length=512,

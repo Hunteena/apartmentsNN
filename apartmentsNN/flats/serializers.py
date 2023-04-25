@@ -43,6 +43,7 @@ class LocationSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['desc'] = [el.strip() for el in ret['desc'].split(',')]
+        ret['geoposition'] = [ret.pop('latitude'), ret.pop('longitude')]
         return ret
 
     class Meta:
