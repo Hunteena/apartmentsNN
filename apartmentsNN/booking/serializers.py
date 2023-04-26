@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 
 from django.conf import settings
@@ -8,6 +9,8 @@ from rest_framework.exceptions import ValidationError
 
 from booking.models import Booking, check_period, get_reserved_dates, period
 from users.models import User
+
+logger = logging.getLogger(__name__)
 
 
 def get_staff_emails(request):
@@ -95,6 +98,7 @@ class BookingSerializer(serializers.ModelSerializer):
         if booking:
             notify_staff(booking, self.context.get('request', None))
             send_pre_booking(booking)
+            logger.info(f"Заявка на бронирование на сайте '{booking}'")
         return booking
 
     class Meta:

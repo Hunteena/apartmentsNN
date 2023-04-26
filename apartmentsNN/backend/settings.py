@@ -162,3 +162,46 @@ CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 ADMIN = ['nina.speranskaya35@gmail.com']
 # DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGGING = {
+    'version': 1,                       # the dictConfig format version
+    'disable_existing_loggers': False,  # retain the default loggers
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} '
+                      '{process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        # 'console': {
+        #     'class': 'logging.StreamHandler',
+        #     'formatter': 'simple'
+        # },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'general.log',
+            'formatter': 'verbose'
+        },
+        'booking': {
+            'class': 'logging.FileHandler',
+            'filename': 'booking.log',
+            'formatter': 'simple'
+        }
+    },
+    'loggers': {
+        'booking': {
+            'handlers': ['booking'],
+            'level': 'INFO',
+            'propagate': False,
+        }
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'WARNING',
+    },
+}
