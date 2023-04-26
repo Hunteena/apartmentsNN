@@ -46,15 +46,16 @@ def check_period(period_to_check: list[datetime], apartment_id: int,
     """
     result = []
     reserved = get_reserved_dates(apartment_id)
-    if exclude:
-        period_to_check = set(period_to_check).difference(exclude)
-    for d in period_to_check:
-        if d in reserved[apartment_id]:
-            result.append(d.isoformat())
-    # print(reserved)
-    # print(set(period_to_check).difference(exclude))
-    # print(result)
-    result.sort()
+    if reserved.get(apartment_id):
+        if exclude:
+            period_to_check = set(period_to_check).difference(exclude)
+        for d in period_to_check:
+            if d in reserved[apartment_id]:
+                result.append(d.isoformat())
+        # print(reserved)
+        # print(set(period_to_check).difference(exclude))
+        # print(result)
+        result.sort()
     return result
 
 
