@@ -1,7 +1,6 @@
 APARTMENT_SCHEMA_EXAMPLE = {
     "id": 0,
-    "images": {
-        "0":
+    "images": [
         [
             {
                 "photo": "string",
@@ -10,7 +9,7 @@ APARTMENT_SCHEMA_EXAMPLE = {
                 "group": 0
             }
         ]
-    },
+    ],
     "comfort": [
         {
             "type": "string",
