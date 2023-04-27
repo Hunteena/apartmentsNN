@@ -64,10 +64,13 @@ class ApartmentSerializer(serializers.ModelSerializer):
         ]
         images = ret.get('images')
         if images:
-            ret['images'] = {
+            groups = {
                 k: list(g)
                 for k, g in groupby(images, key=lambda x: x['group'])
             }
+            ret['images'] = [
+                groups[k] for k in sorted(groups.keys())
+            ]
 
         detailed_fields = {
             'rooms': 'Комнат',
