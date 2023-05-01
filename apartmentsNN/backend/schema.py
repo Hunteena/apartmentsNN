@@ -41,11 +41,11 @@ APARTMENT_SCHEMA_EXAMPLE = {
 }
 
 BOOKING_SCHEMA_EXAMPLE = {
-  "dateFrom": 1688191200000,
-  "dateTo": 1688277600000,
-  "name": "string",
-  "phone": "string",
-  "email": "user@example.com",
-  "guests": 32767,
-  "apartment": 0
+  "dateFrom": '2023-05-01',
+  "dateTo": '2023-05-02',
+  "name": "John",
+  "phone": "Doe",
+  "email": "johndoe@example.com",
+  "guests": 1,
+  "apartment": 1
 }
