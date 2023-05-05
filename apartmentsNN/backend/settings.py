@@ -178,16 +178,19 @@ LOGGING = {
         },
     },
     'handlers': {
-        # 'console': {
-        #     'class': 'logging.StreamHandler',
-        #     'formatter': 'simple'
-        # },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
         'file': {
+            'level': 'WARNING',
             'class': 'logging.FileHandler',
             'filename': 'general.log',
             'formatter': 'verbose'
         },
         'booking': {
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'booking.log',
             'formatter': 'simple'
@@ -195,8 +198,8 @@ LOGGING = {
     },
     'loggers': {
         'booking': {
-            'handlers': ['booking'],
-            'level': 'INFO',
+            'handlers': ['console', 'booking'],
+            'level': 'DEBUG',
             'propagate': False,
         }
     },

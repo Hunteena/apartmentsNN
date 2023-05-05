@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def send_pre_booking_cancelled(booking):
+    logger.debug('Sending email...')
     subject = 'Отмена заявки на бронирование'
     body = (
         f"Добрый день, {booking.name}!\n\n"
@@ -28,13 +29,17 @@ def send_pre_booking_cancelled(booking):
     to = [booking.email]
     email = mail.EmailMessage(subject, body, from_email, to)
     email.send()
+    logger.debug('Email sent')
 
 
 class Command(BaseCommand):
-    help = 'Меняет статус бронирования на cancelled, если бронирование ' \
-           'находится в статусе inwork больше 48 часов'
+    help = f'Меняет статус бронирования на cancelled, если бронирование ' \
+           'находится в статусе inwork больше {PREBOOKING_LIFETIME} часов'
 
     def handle(self, *args, **options):
+        # print(logger)
+        # self.stdout.write(f"----- Checking bookings... -----")
+        logger.debug("Checking bookings...")
         treshold = datetime.now() - timedelta(hours=PREBOOKING_LIFETIME)
         prebookings = Booking.objects.filter(
             status=Status.inwork,
@@ -44,10 +49,10 @@ class Command(BaseCommand):
         )
         # print(prebookings)
         for booking in prebookings:
-            # self.stdout.write(booking.id)
-            # print(booking)
+            logger.debug(f'Cancelling booking {booking}...')
             booking.status = Status.cancelled
             booking.save()
+            logger.debug('Booking cancelled')
             update_status_log(booking=booking, status=Status.cancelled)
             send_pre_booking_cancelled(booking)
             logger.info(f"Автоматическая отмена бронирования '{booking}'")

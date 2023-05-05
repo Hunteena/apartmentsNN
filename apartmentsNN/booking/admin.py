@@ -15,6 +15,7 @@ class StatusLogInline(admin.TabularInline):
 
 
 class BookingAdmin(admin.ModelAdmin):
+    save_on_top = True
     fieldsets = (
         (None, {'fields': ('apartment', 'status')}),
         ('Даты', {'fields': (('dateFrom', 'dateTo'),)}),

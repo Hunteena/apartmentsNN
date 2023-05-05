@@ -1,4 +1,5 @@
 import datetime
+import logging
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -6,6 +7,8 @@ from django.db.models import Q
 
 from flats.models import Apartment
 from users.models import User
+
+logger = logging.getLogger(__name__)
 
 
 def get_reserved_dates(apartment_id: int = None) -> dict:
@@ -85,6 +88,7 @@ def update_status_log(booking: 'Booking', status=Status.inwork, manager=None):
         manager=manager
     )
     new_status.save()
+    logger.debug('Status log updated')
 
 
 class StatusLog(models.Model):
