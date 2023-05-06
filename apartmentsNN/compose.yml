@@ -46,3 +46,18 @@ services:
     networks:
       nn_apartments_network:
     restart: unless-stopped
+
+  scheduler:
+    depends_on:
+      - backend
+    volumes_from:
+      - backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - bash
+      - -c
+      - python jobs.py
+    networks:
+      nn_apartments_network:

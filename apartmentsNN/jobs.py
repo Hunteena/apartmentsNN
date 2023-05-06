@@ -1,57 +1,35 @@
 #!/usr/local/bin python
+
 import datetime as dt
+import time
 
 from scheduler import Scheduler
-
-import environ
-
 import django
 from django.conf import settings
-from backend.settings import EMAIL_BACKEND, INSTALLED_APPS, LOGGING
-# print(LOGGING)
-# from apartmentsNN import diffset as myapp_defaults
-#
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False),
-)
+
+import backend.settings as apartmentsNN_settings
 
 settings.configure(
-    DEBUG=env("DEBUG"),
-    INSTALLED_APPS=INSTALLED_APPS,
-    LOGGING=LOGGING,
-    EMAIL_BACKEND=EMAIL_BACKEND,
-    DATABASES={
-        'default': {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": env("POSTGRES_DB", default=""),
-            "USER": env("POSTGRES_USER", default=""),
-            "PASSWORD": env("POSTGRES_PASSWORD", default=""),
-            "HOST": env("POSTGRES_HOST", default="localhost"),
-            "PORT": env("POSTGRES_PORT", cast=int, default=5432),
-            # "PORT": 5432,
-            # "ATOMIC_REQUESTS": True,
-        }
-    },
+    DEBUG=apartmentsNN_settings.DEBUG,
+    INSTALLED_APPS=apartmentsNN_settings.INSTALLED_APPS,
+    DATABASES = apartmentsNN_settings.DATABASES,
+    LOGGING=apartmentsNN_settings.LOGGING,
+    EMAIL_BACKEND=apartmentsNN_settings.EMAIL_BACKEND,
 )
 django.setup()
 
 
-def foo():
+def cancel_booking_job():
     from django.core import management
-    from booking.management.commands import cancel_booking
-
     management.call_command('cancel_booking')
 
 
 schedule = Scheduler()
-schedule.minutely(dt.time(second=15), foo)
+schedule.hourly(dt.time(minute=30), cancel_booking_job)
 
 # print(schedule)
-# import time
+# schedule.exec_jobs(force_exec_all=True)
 
-schedule.exec_jobs(force_exec_all=True)
-
-# print(schedule)
-
-# time.sleep(1)
+while True:
+    schedule.exec_jobs()
+    time.sleep(3600)
