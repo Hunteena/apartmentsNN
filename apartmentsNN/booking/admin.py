@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
-from booking.models import Booking, update_status_log, StatusLog
+from booking.models import Booking, update_status_log, StatusLog, EmailText
 
 
 class StatusLogInline(admin.TabularInline):
@@ -39,4 +40,28 @@ class BookingAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
+class EmailTextAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fieldsets = (
+        (None, {'fields': (
+            'subject', 'before_name', 'after_name', 'after_booking_info'
+        )}),
+        ('Служебная информация', {'fields': ('name',)}),
+    )
+    list_display = ('subject', 'text')
+
+    @admin.display(description='Текст шаблона')
+    def text(self, obj):
+        return format_html(
+            f"<p>{obj.before_name}, <имя гостя>.</p>"
+            f"<p>{obj.after_name}</p>"
+            f"<p>Информация о бронировании:</p>"
+            f"<p>апартаменты <название апартаментов>,</p>"
+            f"<p>адрес <адрес апартаментов>,</p>"
+            f"<p>даты <дата начала бронирования> - <дата окончания бронирования>.</p>"
+            f"<p>{obj.after_booking_info}</p>"
+        )
+
+
 admin.site.register(Booking, BookingAdmin)
+admin.site.register(EmailText, EmailTextAdmin)

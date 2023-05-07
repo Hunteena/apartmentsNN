@@ -23,7 +23,7 @@ docker exec -it nn_apartments_backend python manage.py createsuperuser
 
 Загрузить в БД данные апартаментов
 ```shell
-docker exec -it nn_apartments_backend python manage.py loaddata initial_apartments.json
+docker exec -it nn_apartments_backend python manage.py loaddata apartments_initial.json
 ```
 
 После успешнего запуска сервера доступны адреса:  

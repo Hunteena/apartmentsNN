@@ -208,3 +208,35 @@ class Booking(models.Model):
             violation_error_message='Дата окончания бронирования не может быть'
                                     ' раньше даты начала или совпадать с ней'
         )]
+
+
+class EmailText(models.Model):
+    name = models.CharField(
+        max_length=20,
+        verbose_name='Название шаблона',
+        help_text='Изменение этого поля может привести к сбою при отправке почты!',
+    )
+    subject = models.CharField(
+        max_length=200,
+        verbose_name='Тема',
+        help_text='Введите тему письма'
+    )
+    before_name = models.TextField(
+        verbose_name='Текст до обращения',
+        help_text='Введите текст письма до обращения к клиенту'
+    )
+    after_name = models.TextField(
+        verbose_name='Текст после обращения до информации о бронировании',
+        help_text='Введите текст письма после обращения до информации о бронировании'
+    )
+    after_booking_info = models.TextField(
+        verbose_name='Текст после информации о бронировании',
+        help_text='Введите текст письма после информации о бронировании'
+    )
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'Шаблон письма'
+        verbose_name_plural = 'Шаблоны писем'
