@@ -3,6 +3,7 @@
 import datetime as dt
 import time
 
+from django.core import management
 from scheduler import Scheduler
 import django
 from django.conf import settings
@@ -20,16 +21,17 @@ django.setup()
 
 
 def cancel_booking_job():
-    from django.core import management
     management.call_command('cancel_booking')
 
 
 schedule = Scheduler()
-schedule.hourly(dt.time(minute=30), cancel_booking_job)
 
+# schedule.minutely(dt.time(second=15), cancel_booking_job)
 # print(schedule)
 # schedule.exec_jobs(force_exec_all=True)
+# print(schedule)
 
+schedule.hourly(dt.time(minute=30), cancel_booking_job)
 while True:
     schedule.exec_jobs()
     time.sleep(3600)

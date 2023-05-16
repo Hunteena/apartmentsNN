@@ -48,6 +48,7 @@ def check_period(period_to_check: list[datetime], apartment_id: int,
     Возвращает для апартаментов с id=apartment_id список дат из period_to_check
     (за исключением дат бронирования exclude), которые недоступны для бронирования
     """
+    result = []
     reserved = get_reserved_dates(apartment_id, exclude)
     if reserved.get(apartment_id):
         result = [

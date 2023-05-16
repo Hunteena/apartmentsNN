@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from django.core.management import BaseCommand
 from django.db.models import Max
+from django.utils import timezone
 
 from booking.emails import send_pre_booking_cancelled
 from booking.models import Booking, Status, update_status_log
@@ -13,22 +14,26 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    help = f'Меняет статус бронирования на cancelled, если бронирование ' \
-           'находится в статусе inwork больше {PREBOOKING_LIFETIME} часов'
+    help = (
+        f'Меняет статус бронирования на cancelled, если бронирование '
+        'находится в статусе inwork или pending больше {PREBOOKING_LIFETIME} '
+        'часов'
+    )
 
     def handle(self, *args, **options):
         # print(logger)
         # self.stdout.write(f"----- Checking bookings... -----")
         logger.debug("Checking bookings...")
-        treshold = datetime.now() - timedelta(hours=PREBOOKING_LIFETIME)
-        prebookings = Booking.objects.filter(
-            status=Status.inwork,
-            statuses__created_at__lt=treshold
-        ).annotate(
+        treshold = timezone.now() - timedelta(hours=PREBOOKING_LIFETIME)
+        expired_prebookings = Booking.objects.annotate(
             last_record=Max('statuses__created_at')
+        ).filter(
+            status__in=[Status.inwork, Status.pending],
+            last_record__lt=treshold
         )
-        # print(prebookings)
-        for booking in prebookings:
+        # print(prebookings.values())
+        # print(f"{treshold=}")
+        for booking in expired_prebookings:
             logger.debug(f'Cancelling booking {booking}...')
             booking.status = Status.cancelled
             booking.save()
