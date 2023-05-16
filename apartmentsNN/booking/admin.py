@@ -21,17 +21,21 @@ class BookingAdmin(admin.ModelAdmin):
         (None, {'fields': ('apartment', 'status')}),
         ('Даты', {'fields': (('dateFrom', 'dateTo'),)}),
         ('Информация о госте', {'fields': ('name', 'phone', 'email',)}),
-        (None, {'fields': ('guests',)})
+        (None, {'fields': ('adults', 'children')})
     )
     # readonly_fields = ('dateFrom', 'dateTo')
     list_filter = ('apartment', 'status', 'dateFrom', 'dateTo')
-    list_display = ('dates', 'apartment', 'status', 'name', 'phone')
+    list_display = ('dates', 'apartment', 'status', 'name', 'phone', 'guests')
     inlines = [StatusLogInline]
     ordering = ['-dateFrom']
 
     @admin.display(description='Даты')
     def dates(self, obj):
         return f"{obj.dateFrom} - {obj.dateTo}"
+
+    @admin.display(description='Гости')
+    def guests(self, obj):
+        return f"Взрослых: {obj.adults}, детей: {obj.children}"
 
     def save_model(self, request, obj, form, change):
         previous_data = Booking.objects.get(pk=obj.pk)

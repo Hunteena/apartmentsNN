@@ -11,17 +11,18 @@ from users.models import User
 logger = logging.getLogger(__name__)
 
 
-def get_reserved_dates(apartment_id: int = None) -> dict:
+# TODO move functions to separate module
+def get_reserved_dates(apartment_id: int = None, exclude: int = None) -> dict:
     """
     Возвращает словарь, где id апартаментов сопоставлен список забронированных дат.
     Последняя дата бронирования считается свободной.
     """
-    query = Q(status='inwork') | Q(status='confirmed')
+    query = Q(status__in=[Status.inwork, Status.confirmed, Status.pending])
+    if exclude:
+        query = query & ~Q(id=exclude)
     if apartment_id:
         query = query & Q(apartment=apartment_id)
-    queryset = Booking.objects.filter(query).only(
-        'apartment', 'dateFrom', 'dateTo'
-    )
+    queryset = Booking.objects.filter(query)
     reserved = {}
     for booking in queryset:
         d = booking.dateFrom
@@ -42,21 +43,20 @@ def get_reserved_dates(apartment_id: int = None) -> dict:
 
 
 def check_period(period_to_check: list[datetime], apartment_id: int,
-                 exclude: list[datetime] = None) -> list[datetime]:
+                 exclude: int = None) -> list[datetime]:
     """
     Возвращает для апартаментов с id=apartment_id список дат из period_to_check
-    (за исключением дат из exclude), которые недоступны для бронирования
+    (за исключением дат бронирования exclude), которые недоступны для бронирования
     """
-    result = []
-    reserved = get_reserved_dates(apartment_id)
+    reserved = get_reserved_dates(apartment_id, exclude)
     if reserved.get(apartment_id):
-        if exclude:
-            period_to_check = set(period_to_check).difference(exclude)
-        for d in period_to_check:
-            if d in reserved[apartment_id]:
-                result.append(d.isoformat())
+        result = [
+            d.isoformat()
+            for d in set(period_to_check).intersection(reserved[apartment_id])
+        ]
         # print(reserved)
-        # print(set(period_to_check).difference(exclude))
+        # print(period_to_check)
+        # print(set(period_to_check).intersection(reserved))
         # print(result)
         result.sort()
     return result
@@ -79,6 +79,7 @@ class Status(models.TextChoices):
     inwork = 'inwork', 'В работе'
     confirmed = 'confirmed', 'Подтверждено'
     cancelled = 'cancelled', 'Отменено'
+    pending = 'pending', 'Ожидает отмены другого бронирования'
 
 
 def update_status_log(booking: 'Booking', status=Status.inwork, manager=None):
@@ -162,26 +163,23 @@ class Booking(models.Model):
         choices=Status.choices,
         default=Status.inwork
     )
-    guests = models.PositiveSmallIntegerField(
-        verbose_name='Количество гостей',
-        help_text='Введите количество гостей',
+    adults = models.PositiveSmallIntegerField(
+        verbose_name='Количество взрослых гостей',
+        help_text='Введите количество взрослых гостей',
         default=1
+    )
+    children = models.PositiveSmallIntegerField(
+        verbose_name='Количество детей',
+        help_text='Введите количество детей',
+        default=0
     )
 
     def clean(self):
-        if self.pk:
-            previous_data = self.__class__.objects.get(pk=self.pk)
-            if previous_data.status in (Status.inwork, Status.confirmed):
-                dates_to_exclude = period(
-                    start=previous_data.dateFrom,
-                    end=previous_data.dateTo
-                )
-            else:
-                dates_to_exclude = None
+        if self.pk and (self.status in (Status.inwork, Status.confirmed)):
             forbidden = check_period(
                 period(self.dateFrom, self.dateTo),
                 apartment_id=self.apartment.id,
-                exclude=dates_to_exclude
+                exclude=self.id,
             )
             # print(forbidden)
             if forbidden:

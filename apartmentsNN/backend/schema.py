@@ -41,11 +41,15 @@ APARTMENT_SCHEMA_EXAMPLE = {
 }
 
 BOOKING_SCHEMA_EXAMPLE = {
-  "dateFrom": '2023-05-01',
-  "dateTo": '2023-05-02',
-  "name": "John",
-  "phone": "Doe",
-  "email": "johndoe@example.com",
-  "guests": 1,
-  "apartment": 1
+    "dateFrom": '2023-05-01',
+    "dateTo": '2023-05-02',
+    "name": "John Doe",
+    "phone": "123456789",
+    "email": "johndoe@example.com",
+    "guests": {
+        'adult': 1,
+        "children": 0
+    },
+    "apartment": 1,
+    "crossDates": True
 }
