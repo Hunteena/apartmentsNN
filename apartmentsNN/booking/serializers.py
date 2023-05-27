@@ -20,7 +20,7 @@ class BookingSerializer(serializers.ModelSerializer):
         data['adults'] = guests['adult']
         data['children'] = guests.get('children', 0)
 
-        if data.get('crossDates'):
+        if data.get('crossDates') is not None:
             data.pop('crossDates')
             data['status'] = Status.pending
         else:

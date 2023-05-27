@@ -21,7 +21,7 @@ docker-compose up --build
 docker exec -it nn_apartments_backend python manage.py createsuperuser
 ```
 
-Загрузить в БД данные апартаментов
+Загрузить в БД начальные данные (информация об апартаментах и шаблоны писем)
 ```shell
 docker exec -it nn_apartments_backend python manage.py loaddata apartments_initial.json
 ```
