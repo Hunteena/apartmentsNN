@@ -21,10 +21,8 @@ class BookingSerializer(serializers.ModelSerializer):
         data['children'] = guests.get('children', 0)
 
         if data.get('crossDates') is not None:
-            data.pop('crossDates')
-            data['status'] = Status.pending
-        else:
-            data['status'] = Status.inwork
+            cross_dates = data.pop('crossDates')
+            data['status'] = Status.pending if cross_dates else Status.inwork
         return data
 
     def validate(self, attrs):
