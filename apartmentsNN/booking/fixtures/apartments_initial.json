@@ -3,7 +3,7 @@
     "model": "booking.emailtext",
     "pk": 1,
     "fields": {
-      "name": "prebooking",
+      "type": "prebooking",
       "subject": "Заявка на бронирование",
       "before_name": "Добрый день",
       "after_name": "Вы оставили заявку на бронирование на сайте Квартиры в Нижнем Новгороде.",
@@ -14,7 +14,7 @@
     "model": "booking.emailtext",
     "pk": 2,
     "fields": {
-      "name": "cancel",
+      "type": "cancel",
       "subject": "Отмена заявки на бронирование",
       "before_name": "Добрый день",
       "after_name": "Вы оставляли заявку на бронирование на сайте Квартиры в Нижнем Новгороде.",

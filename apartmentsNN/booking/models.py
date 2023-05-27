@@ -209,15 +209,24 @@ class Booking(models.Model):
         )]
 
 
+class EmailType(models.TextChoices):
+    prebooking = 'prebooking', 'Заявка'
+    cancel = 'cancel', 'Отмена'
+    reminder = 'reminder', 'Напоминание'
+
+
 class EmailText(models.Model):
-    name = models.CharField(
+    type = models.CharField(
         max_length=20,
-        verbose_name='Название шаблона',
+        choices=EmailType.choices,
+        null=True,
+        blank=True,
+        verbose_name='Тип шаблона',
         help_text='Изменение этого поля может привести к сбою при отправке почты!',
     )
     subject = models.CharField(
         max_length=200,
-        verbose_name='Тема',
+        verbose_name='Тема письма',
         help_text='Введите тему письма'
     )
     before_name = models.TextField(

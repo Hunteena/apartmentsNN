@@ -48,11 +48,11 @@ class EmailTextAdmin(admin.ModelAdmin):
     save_on_top = True
     fieldsets = (
         (None, {'fields': (
+            ('type',),
             'subject', 'before_name', 'after_name', 'after_booking_info'
         )}),
-        ('Служебная информация', {'fields': ('name',)}),
     )
-    list_display = ('subject', 'text')
+    list_display = ('type', 'subject', 'text')
 
     @admin.display(description='Текст шаблона')
     def text(self, obj):

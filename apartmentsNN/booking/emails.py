@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core import mail
 from django.urls import reverse
 
-from booking.models import EmailText
+from booking.models import EmailText, EmailType
 from flats.models import Apartment
 from users.models import User
 
@@ -34,17 +34,27 @@ def get_staff_emails(request):
     return staff_emails
 
 
-def get_email_template(booking, template_name: str) -> tuple:
-    email_text = EmailText.objects.get(name=template_name)
+def get_email_template(booking, template_type: EmailType) -> tuple:
     apartment = Apartment.objects.get(id=booking.apartment.id)
-    subject = email_text.subject
-    body = (
-        f"{email_text.before_name} {booking.name}.\n\n"
-        f"{email_text.after_name}\n\n"
+    booking_info = (
         f"Информация о бронировании:\n"
         f"апартаменты {booking.apartment},\n"
         f"адрес {apartment.address},\n"
         f"даты {booking.dateFrom} - {booking.dateTo}.\n\n"
+    )
+
+    try:
+        email_text = EmailText.objects.get(type=template_type)
+    except EmailText.DoesNotExist:
+        logger.warning(f'No email template for {template_type}')
+        return template_type, booking_info
+
+    subject = email_text.subject
+    body = (
+        f"{email_text.before_name} "
+        f"{booking.name}.\n\n"
+        f"{email_text.after_name}\n\n"
+        f"{booking_info}"
         f"{email_text.after_booking_info}"
     )
     return subject, body
@@ -72,7 +82,7 @@ def notify_staff(booking, request):
 
 
 def send_pre_booking(booking):
-    subject, body = get_email_template(booking, 'prebooking')
+    subject, body = get_email_template(booking, EmailType.prebooking)
     from_email = settings.DEFAULT_FROM_EMAIL
     to = [booking.email]
     email = mail.EmailMessage(subject, body, from_email, to)
@@ -81,7 +91,7 @@ def send_pre_booking(booking):
 
 def send_pre_booking_cancelled(booking):
     logger.debug('Sending email...')
-    subject, body = get_email_template(booking, 'cancel')
+    subject, body = get_email_template(booking, EmailType.cancel)
     from_email = settings.DEFAULT_FROM_EMAIL
     to = [booking.email]
     email = mail.EmailMessage(subject, body, from_email, to)
