@@ -185,13 +185,17 @@ LOGGING = {
         },
         'file': {
             'level': 'WARNING',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 5*1024*1024,
+            'backupCount': 2,
             'filename': 'general.log',
             'formatter': 'verbose'
         },
         'booking': {
             'level': 'INFO',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'maxBytes': 1024*1024,
+            'backupCount': 2,
             'filename': 'booking.log',
             'formatter': 'simple'
         }

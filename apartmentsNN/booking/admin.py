@@ -26,7 +26,7 @@ class StatusListFilter(admin.SimpleListFilter):
          )
         for status in Status.choices:
             lookups_tuple += (status, )
-        print(lookups_tuple)
+        # print(lookups_tuple)
         return lookups_tuple
 
     def queryset(self, request, queryset):
