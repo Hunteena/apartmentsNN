@@ -12,10 +12,15 @@ logger = logging.getLogger(__name__)
 
 
 # TODO move functions to separate module
-def get_reserved_dates(apartment_id: int = None, exclude: int = None) -> dict:
+def get_reserved_dates(apartment_id: int = None, exclude: int = None) -> dict[int, list]:
     """
-    Возвращает словарь, где id апартаментов сопоставлен список забронированных дат.
-    Последняя дата бронирования считается свободной.
+    Возвращает словарь, где id апартаментов сопоставлен список забронированных
+    дат. Последняя дата бронирования считается свободной. Можно исключить даты
+    определенного бронирования (для валидации изменений бронирования в
+    административной панели)
+
+    :param apartment_id: id апартаментов
+    :param exclude: id бронирования, которое нужно исключить
     """
     query = Q(status__in=[Status.inwork, Status.confirmed, Status.pending])
     if exclude:
@@ -37,7 +42,7 @@ def get_reserved_dates(apartment_id: int = None, exclude: int = None) -> dict:
             reserved[booking.apartment.id] = dates
         # print(reserved[booking.apartment.id])
     for apartment in reserved:
-        reserved[apartment].sort()
+        reserved[apartment] = sorted(set(reserved[apartment]))
 
     return reserved
 
@@ -45,8 +50,14 @@ def get_reserved_dates(apartment_id: int = None, exclude: int = None) -> dict:
 def check_period(period_to_check: list[datetime], apartment_id: int,
                  exclude: int = None) -> list[datetime]:
     """
-    Возвращает для апартаментов с id=apartment_id список дат из period_to_check
-    (за исключением дат бронирования exclude), которые недоступны для бронирования
+    Возвращает список недоступных для бронирования дат (за исключением дат
+    бронирования exclude) из списка дат period_to_check для апартаментов с
+    id=apartment_id
+
+    :param period_to_check: список дат для проверки
+    :param apartment_id: id апартаментов
+    :param exclude: id бронирования, которое нужно исключить
+
     """
     result = []
     reserved = get_reserved_dates(apartment_id, exclude)
@@ -65,11 +76,11 @@ def check_period(period_to_check: list[datetime], apartment_id: int,
 
 def period(start: datetime, end: datetime) -> list[datetime]:
     """
-    Возвращает список дат от start до end включительно
+    Возвращает список дат от start до end, не включая последнюю
     """
     result = []
     d = start
-    while d <= end:
+    while d < end:
         result.append(d)
         d += datetime.timedelta(days=1)
     # print(result)
@@ -79,8 +90,8 @@ def period(start: datetime, end: datetime) -> list[datetime]:
 class Status(models.TextChoices):
     inwork = 'inwork', 'В работе'
     confirmed = 'confirmed', 'Подтверждено'
-    cancelled = 'cancelled', 'Отменено'
     pending = 'pending', 'Ожидает отмены другого бронирования'
+    cancelled = 'cancelled', 'Отменено'
 
 
 def update_status_log(booking: 'Booking', status=Status.inwork, manager=None):

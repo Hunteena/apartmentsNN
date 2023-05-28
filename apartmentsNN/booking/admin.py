@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from booking.models import Booking, update_status_log, StatusLog, EmailText
+from booking.models import Booking, update_status_log, StatusLog, EmailText, \
+    Status
 
 
 class StatusLogInline(admin.TabularInline):
@@ -15,6 +16,29 @@ class StatusLogInline(admin.TabularInline):
         return False
 
 
+class StatusListFilter(admin.SimpleListFilter):
+    title = 'Статус бронирования'
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        lookups_tuple = (
+            ('Active', 'Кроме отмененных'),
+         )
+        for status in Status.choices:
+            lookups_tuple += (status, )
+        print(lookups_tuple)
+        return lookups_tuple
+
+    def queryset(self, request, queryset):
+        match self.value():
+            case None:
+                return queryset.all()
+            case 'Active':
+                return queryset.exclude(status=Status.cancelled)
+            case status:
+                return queryset.filter(status=status)
+
+
 class BookingAdmin(admin.ModelAdmin):
     save_on_top = True
     fieldsets = (
@@ -24,7 +48,7 @@ class BookingAdmin(admin.ModelAdmin):
         (None, {'fields': ('adults', 'children')})
     )
     # readonly_fields = ('dateFrom', 'dateTo')
-    list_filter = ('apartment', 'status', 'dateFrom', 'dateTo')
+    list_filter = ('apartment', StatusListFilter, 'dateFrom', 'dateTo')
     list_display = ('dates', 'apartment', 'status', 'name', 'phone', 'guests')
     inlines = [StatusLogInline]
     ordering = ['-dateFrom']
