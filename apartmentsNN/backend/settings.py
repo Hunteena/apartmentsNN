@@ -156,7 +156,8 @@ SPECTACULAR_SETTINGS = {
     # OTHER SETTINGS
 }
 
-CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 # CORS_ALLOW_HEADERS = default_headers + ('approval',)
 
 ADMIN = ['nina.speranskaya35@gmail.com']
