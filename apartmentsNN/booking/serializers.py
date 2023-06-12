@@ -29,7 +29,7 @@ class BookingSerializer(serializers.ModelSerializer):
         if attrs['dateFrom'] >= attrs['dateTo']:
             raise ValidationError('Дата окончания бронирования не может быть '
                                   'раньше даты начала или совпадать с ней')
-        if not attrs['status'] == Status.pending:
+        if not attrs.get('status') == Status.pending:
             forbidden = check_period(
                 period(attrs['dateFrom'], attrs['dateTo']),
                 apartment_id=attrs['apartment'].id

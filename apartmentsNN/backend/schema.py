@@ -47,9 +47,9 @@ BOOKING_SCHEMA_EXAMPLE = {
     "phone": "123456789",
     "email": "johndoe@example.com",
     "guests": {
-        'adult': 1,
+        "adult": 1,
         "children": 0
     },
     "apartment": 1,
-    "crossDates": True
+    "crossDates": False
 }
