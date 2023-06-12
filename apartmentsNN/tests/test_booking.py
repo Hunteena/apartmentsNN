@@ -6,21 +6,8 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from booking.models import Status
+from booking.models import Status, Booking, period
 from flats.models import Apartment
-
-
-@pytest.fixture
-def api_client():
-    return APIClient()
-
-
-@pytest.fixture
-def apartment_factory():
-    def factory(*args, **kwargs):
-        return baker.make(Apartment, *args, **kwargs)
-
-    return factory
 
 
 BOOKING_EXAMPLE = {
@@ -32,6 +19,25 @@ BOOKING_EXAMPLE = {
         "children": 0
     },
 }
+
+
+@pytest.fixture
+def api_client():
+    return APIClient()
+
+
+@pytest.fixture
+def apartment_factory():
+    def factory(*args, **kwargs):
+        return baker.make(Apartment, *args, **kwargs)
+    return factory
+
+
+@pytest.fixture
+def booking_factory():
+    def factory(*args, **kwargs):
+        return baker.make(Booking, *args, **kwargs)
+    return factory
 
 
 def today_plus_n_days(n: int) -> str:
@@ -81,3 +87,16 @@ class TestBookingAPI:
         response = api_client.post(url, booking)
         assert response.status_code == status.HTTP_201_CREATED, "With crossdates"
         assert response.data.get('status') == Status.pending, "Status pending"
+
+    def test_reserved_dates(self, api_client, booking_factory):
+        url = reverse('dates')
+        start, end = date.today(), date.today() + timedelta(days=10)
+        booking = booking_factory(
+            dateFrom=start,
+            dateTo=end,
+            status=Status.confirmed
+        )
+
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK, "Get reserved dates"
+        assert response.data[0]['dates'] == period(start, end), "Correct dates"
