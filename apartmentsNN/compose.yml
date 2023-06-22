@@ -25,6 +25,7 @@ services:
       nn_apartments_network:
 
   backend:
+    image: apartments-backend
     container_name: nn_apartments_backend
     depends_on:
       db:
@@ -48,13 +49,11 @@ services:
     restart: unless-stopped
 
   scheduler:
+    image: apartments-backend
     depends_on:
       - backend
     volumes_from:
       - backend
-    build:
-      context: .
-      dockerfile: Dockerfile
     command:
       - bash
       - -c
