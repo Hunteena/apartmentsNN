@@ -213,3 +213,6 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
+
+NGINX_PORT = env('NGINX_PORT', cast=int, default=86)
+CSRF_TRUSTED_ORIGINS = [f"http://127.0.0.1:{NGINX_PORT}"]

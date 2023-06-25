@@ -9,8 +9,6 @@ services:
     container_name: ${POSTGRES_HOST}
     image: postgres:alpine
     env_file: .env
-    ports:
-      - "${POSTGRES_PORT}:5432"
     volumes:
       - nn_apartments_data:/var/lib/postgresql/data
     healthcheck:
@@ -26,24 +24,25 @@ services:
 
   backend:
     image: apartments-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: nn_apartments_backend
     depends_on:
       db:
         condition: service_healthy
     env_file: .env
+    environment:
+      - POSTGRES_PORT=5432
     volumes:
       - .:/apartmentsNN
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
     command:
       - bash
       - -c
       - |
         python manage.py migrate
-        python manage.py runserver 0.0.0.0:8000
+        python manage.py collectstatic --no-input
+        gunicorn backend.wsgi --bind 0.0.0.0:8000
     networks:
       nn_apartments_network:
     restart: unless-stopped
@@ -58,5 +57,17 @@ services:
       - bash
       - -c
       - python jobs.py
+    networks:
+      nn_apartments_network:
+
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - .:/apartmentsNN
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - backend
     networks:
       nn_apartments_network:
