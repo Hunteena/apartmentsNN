@@ -3,8 +3,8 @@ from rest_framework import generics
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from backend.schema import APARTMENT_SCHEMA_EXAMPLE
-from flats.models import Apartment, MainPage
-from flats.serializers import ApartmentSerializer, MainPageSerializer
+from apps.flats.models import Apartment, MainPage
+from apps.flats.serializers import ApartmentSerializer, MainPageSerializer
 
 
 # TODO избавиться от сложного примера ответа

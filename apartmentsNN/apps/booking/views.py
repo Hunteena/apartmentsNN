@@ -1,13 +1,11 @@
-from datetime import date, datetime
-
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
 
 from backend.schema import BOOKING_SCHEMA_EXAMPLE
-from booking.models import Booking, get_reserved_dates
-from booking.serializers import BookingSerializer, ReservedDatesSerializer
+from apps.booking.models import Booking, get_reserved_dates
+from apps.booking.serializers import BookingSerializer, ReservedDatesSerializer
 
 
 @extend_schema(

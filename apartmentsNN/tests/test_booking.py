@@ -6,8 +6,8 @@ from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from booking.models import Status, Booking, period
-from flats.models import Apartment
+from apps.booking.models import Status, Booking, period
+from apps.flats.models import Apartment
 
 
 BOOKING_EXAMPLE = {

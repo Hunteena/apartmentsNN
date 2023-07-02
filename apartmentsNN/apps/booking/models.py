@@ -5,8 +5,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 
-from flats.models import Apartment
-from users.models import User
+from apps.flats.models import Apartment
+from apps.users.models import User
 
 logger = logging.getLogger(__name__)
 

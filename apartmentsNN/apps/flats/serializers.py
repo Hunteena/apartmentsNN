@@ -2,7 +2,7 @@ from itertools import groupby
 
 from rest_framework import serializers
 
-from flats.models import (
+from apps.flats.models import (
     Apartment,
     ApartmentImage,
     Comfort,

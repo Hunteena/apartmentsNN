@@ -4,9 +4,9 @@ from django.conf import settings
 from django.core import mail
 from django.urls import reverse
 
-from booking.models import EmailText, EmailType
-from flats.models import Apartment
-from users.models import User
+from apps.booking.models import EmailText, EmailType
+from apps.flats.models import Apartment
+from apps.users.models import User
 
 logger = logging.getLogger(__name__)
 

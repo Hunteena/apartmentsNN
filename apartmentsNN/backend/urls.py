@@ -5,8 +5,8 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
 
-from booking.views import BookingCreateAPIView, ReservedDatesAPIView
-from flats.views import ApartmentViewSet, MainPageViewSet
+from apps.booking.views import BookingCreateAPIView, ReservedDatesAPIView
+from apps.flats.views import ApartmentViewSet, MainPageViewSet
 
 admin.site.site_header = 'Администрирование сайта "Квартиры в Нижнем Новгороде"'
 admin.site.site_title = "Администрирование сайта"

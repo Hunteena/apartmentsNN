@@ -3,8 +3,8 @@ import logging
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from booking.emails import notify_staff, send_pre_booking
-from booking.models import Booking, check_period, period, Status
+from apps.booking.emails import notify_staff, send_pre_booking
+from apps.booking.models import Booking, check_period, period, Status
 
 logger = logging.getLogger(__name__)
 

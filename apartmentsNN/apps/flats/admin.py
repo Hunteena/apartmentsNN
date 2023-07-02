@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from flats.models import (
+from apps.flats.models import (
     Apartment,
     ApartmentImage,
     Comfort,

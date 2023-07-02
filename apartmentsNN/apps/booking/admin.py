@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from booking.models import Booking, update_status_log, StatusLog, EmailText, \
+from apps.booking.models import Booking, update_status_log, StatusLog, EmailText, \
     Status
 
 

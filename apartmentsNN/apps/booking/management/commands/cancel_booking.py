@@ -1,12 +1,12 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.core.management import BaseCommand
 from django.db.models import Max
 from django.utils import timezone
 
-from booking.emails import send_pre_booking_cancelled
-from booking.models import Booking, Status, update_status_log
+from apps.booking.emails import send_pre_booking_cancelled
+from apps.booking.models import Booking, Status, update_status_log
 
 PREBOOKING_LIFETIME = 48
 
