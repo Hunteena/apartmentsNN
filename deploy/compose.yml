@@ -8,7 +8,7 @@ services:
   db:
     container_name: ${POSTGRES_HOST}
     image: postgres:alpine
-    env_file: .env
+    env_file: ../apartmentsNN/.env
     volumes:
       - nn_apartments_data:/var/lib/postgresql/data
     healthcheck:
@@ -31,7 +31,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file: .env
+    env_file: ../apartmentsNN/.env
     environment:
       - POSTGRES_PORT=5432
     volumes:
@@ -71,7 +71,8 @@ services:
     volumes:
       - ../apartmentsNN/django_static:/django_static
       - ./nginx:/etc/nginx/conf.d
-      - ../build:/build
+      - ./logs:/var/log/nginx
+#      - ../build:/build
     depends_on:
       - backend
     networks:
