@@ -215,4 +215,4 @@ LOGGING = {
 }
 
 NGINX_PORT = env('NGINX_PORT', cast=int, default=86)
-CSRF_TRUSTED_ORIGINS = [f"{env('DOMAIN', default='127.0.0.1')}"]
+CSRF_TRUSTED_ORIGINS = [f"http://{env('DOMAIN', default='127.0.0.1')}"]
