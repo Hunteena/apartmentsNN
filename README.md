@@ -12,9 +12,10 @@ cd apartmentsNN
 ```
 Создать файл _.env_, аналогичный файлу [.env.example](apartmentsNN/.env.example)
 
-Запустить сервер
+Создать docker-образы и запустить сервер
 ```shell
-docker-compose up --build
+docker-compose build
+docker-compose up
 ```
 Создать суперпользователя для входа в административную панель
 ```shell
