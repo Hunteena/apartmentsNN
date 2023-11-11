@@ -70,6 +70,7 @@ services:
       - "${NGINX_PORT}:80"
     volumes:
       - ../apartmentsNN/django_static:/django_static
+      - ../apartmentsNN/media:/media
       - ./nginx:/etc/nginx/conf.d
       - ./logs:/var/log/nginx
 #      - ../build:/build
