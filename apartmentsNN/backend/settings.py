@@ -133,7 +133,7 @@ USE_TZ = True
 STATIC_URL = "/django_static/"
 STATIC_ROOT = BASE_DIR / "django_static"
 
-MEDIA_URL = "/media/"
+MEDIA_URL = f"http://{env('DOMAIN', default='')}/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
